@@ -27,6 +27,7 @@ body{
 
     transform-style: preserve-3d;
     transition: 0.5s;
+    contex
 }
 
 .card_front, .card_back{
@@ -54,6 +55,14 @@ body{
     color: #101c2c;
     background-color: #05c3ff;
     font-size: 30px;
+}
+
+.card_front > img{
+    pointer-events: none;
+    user-select: none;
+}
+.card_back{
+    user-select: none;
 }
 
 #gameOver{

@@ -3,33 +3,16 @@ const BACK = 'card_back';
 const CARD = 'card'
 const ICON = 'icon';
 
-let techs = [
-    'bootstrap',
-    'css',
-    'electron',
-    'firebase',
-    'html',
-    'javascript',
-    'jquery',
-    'mongo',
-    'node',
-    'react'
-    ];
-
-    let cards = [];
-
 startGame();
 
 function startGame() {
-    cards = createCardsFromTechs(techs);
-    shuffleCards(cards);
-    console.log(cards);
-    initializeCards(cards);
+    initializeCards(game.createCardsFromTechs());
 }
 
 function initializeCards(cards) {
     let gameBoard = document.getElementById('gameBoard');
-
+    gameBoard.innerHTML = '';
+    game.moves = 0;
     cards.forEach(card => {
         let cardElement = document.createElement('div');
         cardElement.id = card.id;
@@ -61,56 +44,40 @@ function createCardFace(face, card, element) {
     element.appendChild(cardElementFace);
 }
 
-function shuffleCards(cards) {
-    let currentIndex = cards.length;
-    let randomIndex = 0;
+function flipCard() {
 
-    while(currentIndex !== 0){
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
+    if(game.setCard(this.id)){
+        this.classList.add('flip');
+        if (game.secondCard) {
+            if(game.checkMatch()){
+                game.clearCards();
+                if(game.checkGameOver()){
+                    let gameOverLayer = document.getElementById('gameOver');
+                    let textEndGame = document.getElementById('textEndGame');
+                    textEndGame.innerHTML = 'Parabéns, você completou o jogo com '+game.moves+' movimentos.'
+                    setTimeout(() => {
+                        gameOverLayer.style.display = 'flex';
+                    }, 800);
+                }
+            }else{
+                setTimeout(() => {
+                    let firstCardView = document.getElementById(game.firstCard.id);
+                    let secondCardView = document.getElementById(game.secondCard.id);
+                    
 
-        [cards[randomIndex], cards[currentIndex]] = [cards[currentIndex], cards[randomIndex]];
+                    firstCardView.classList.remove('flip');
+                    secondCardView.classList.remove('flip');
+                    game.unflipCards();
+                }, 1000);
+    
+            } 
+        }
     }
 }
 
-function createCardsFromTechs(techs) {
-
-    let cards = [];
-
-    techs.forEach(tech => {
-        cards.push(createPairFromTech(tech));
-    });
-
-    return cards.flatMap(card => card);
-}
-3
-
-function createPairFromTech(tech) {
-
-    let ids = createIdsWithTech(tech);
-
-    return [{
-                id: ids[0],
-                icon: tech,
-                flipped: false
-            },
-            {
-                id: ids[1],
-                icon: tech,
-                flipped: false
-            }]
-}
-
-function createIdsWithTech(tech) {
-    let ids = [];
-    ids[0] = tech + Math.floor(Math.random() * 100);
-    do{ 
-        ids[1] = tech + Math.floor(Math.random() * 100);
-    }while(ids[0] === ids[1]);
-
-    return ids;
-}
-
-function flipCard() {
-    this.classList.add('flip');
+function restart() {
+    game.clearCards();
+    startGame();
+    let gameOverLayer = document.getElementById('gameOver');
+    gameOverLayer.style.display = 'none';
 }
