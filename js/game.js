@@ -5,6 +5,16 @@ let game = {
     secondCard: null,
     moves: 0,
 
+    getRecord:function () {
+        let record = localStorage.getItem('record')
+        if (record === null) {return false}
+        return parseInt(record);
+    },
+
+    setRecord: function (record) {
+        localStorage.setItem('record', record)
+    },
+
     setCard:function (id) {
         let card = this.cards.filter(card => card.id === id)[0];
 
@@ -44,7 +54,7 @@ let game = {
         this.clearCards();  
     },
 
-    checkGameOver(){
+    checkGameOver: function(){
         return this.cards.filter(card => !card.flipped).length == 0;
     },
 
@@ -108,11 +118,11 @@ let game = {
     let currentIndex = this.cards.length;
     let randomIndex = 0;
 
-    while(currentIndex !== 0){
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
+        while(currentIndex !== 0){
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
 
-        [this.cards[randomIndex], this.cards[currentIndex]] = [this.cards[currentIndex], this.cards[randomIndex]];
+            [this.cards[randomIndex], this.cards[currentIndex]] = [this.cards[currentIndex], this.cards[randomIndex]];
+        }
     }
-}
 }

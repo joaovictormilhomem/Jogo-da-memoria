@@ -52,12 +52,7 @@ function flipCard() {
             if(game.checkMatch()){
                 game.clearCards();
                 if(game.checkGameOver()){
-                    let gameOverLayer = document.getElementById('gameOver');
-                    let textEndGame = document.getElementById('textEndGame');
-                    textEndGame.innerHTML = 'Parabéns, você completou o jogo com '+game.moves+' movimentos.'
-                    setTimeout(() => {
-                        gameOverLayer.style.display = 'flex';
-                    }, 800);
+                   gameIsOver();
                 }
             }else{
                 setTimeout(() => {
@@ -73,6 +68,23 @@ function flipCard() {
             } 
         }
     }
+}
+
+function gameIsOver() {
+    let recordMoves = game.getRecord();
+    let gameOverLayer = document.getElementById('gameOver');
+    let textEndGame = document.getElementById('textEndGame');
+
+    if (recordMoves > game.moves || recordMoves === false) {
+        game.setRecord(game.moves);
+        recordMoves = game.moves;
+        textEndGame.innerHTML = 'Parabéns, você completou o jogo com '+game.moves+' movimentos. <br> O recorde é: '+game.moves+' movimentos';
+    }
+    else
+        textEndGame.innerHTML = 'Parabéns, você completou o jogo com '+game.moves+' movimentos. <br> O recorde é: '+recordMoves+' movimentos';
+    setTimeout(() => {
+        gameOverLayer.style.display = 'flex';
+    }, 800);
 }
 
 function restart() {
